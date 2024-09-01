@@ -13,3 +13,8 @@ extern dec oneOf(target: Union | ModelProperty);
  * @param ref External reference(e.g. "../../common.json#/components/schemas/Foo")
  */
 extern dec useRef(target: Model | ModelProperty, ref: valueof string);
+
+/**
+ * Specify the error codes that can be returned by the operation.
+ */
+extern dec errorCodes(target: Operation, errorCodes: Union);

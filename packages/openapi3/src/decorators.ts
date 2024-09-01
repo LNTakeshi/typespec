@@ -1,5 +1,5 @@
-import { DecoratorContext, Model, ModelProperty, Program, Type, Union } from "@typespec/compiler";
-import { OneOfDecorator, UseRefDecorator } from "../generated-defs/TypeSpec.OpenAPI.js";
+import { DecoratorContext, Model, ModelProperty, Operation, Program, setTypeSpecNamespace, Type, Union } from "@typespec/compiler";
+import {  ErrorCodesDecorator, OneOfDecorator, UseRefDecorator } from "../generated-defs/TypeSpec.OpenAPI.js";
 import { createStateSymbol, reportDiagnostic } from "./lib.js";
 
 const refTargetsKey = createStateSymbol("refs");
@@ -31,4 +31,17 @@ export const $oneOf: OneOfDecorator = (
 
 export function getOneOf(program: Program, entity: Type): boolean {
   return program.stateMap(oneOfKey).get(entity);
+}
+
+const errorCodesKey = createStateSymbol("errorCodes");
+export const $errorCodes: ErrorCodesDecorator = (
+  context: DecoratorContext,
+  entity: Operation,
+  errorCodes: Union
+) => {
+  context.program.stateMap(errorCodesKey).set(entity, errorCodes);
+};
+
+export function getErrorCodes(program: Program, entity: Type): Union {
+  return program.stateMap(errorCodesKey).get(entity);
 }

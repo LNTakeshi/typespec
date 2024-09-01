@@ -42,6 +42,8 @@ import {
   Service,
   Type,
   TypeNameOptions,
+  StringLiteral,
+  UnionVariant,
 } from "@typespec/compiler";
 
 import { AssetEmitter, createAssetEmitter, EmitEntity } from "@typespec/compiler/emitter-framework";
@@ -85,7 +87,7 @@ import {
 } from "@typespec/openapi";
 import { buildVersionProjections, VersionProjections } from "@typespec/versioning";
 import { stringify } from "yaml";
-import { getRef } from "./decorators.js";
+import { getErrorCodes, getRef } from "./decorators.js";
 import { applyEncoding } from "./encoding.js";
 import { getExampleOrExamples, OperationExamples, resolveOperationExamples } from "./examples.js";
 import { createDiagnostic, FileType, OpenAPI3EmitterOptions } from "./lib.js";
@@ -776,6 +778,32 @@ function createOAPIEmitter(
       parameters: getEndpointParameters(parameters.parameters, visibility),
       responses: getResponses(operation, operation.responses, examples),
     };
+
+    const getCircularReplacer = () => {
+      const seen = new WeakSet();
+      return (_: any, value: object | null) => {
+        if (typeof value === "object" && value !== null) {
+          if (seen.has(value)) {
+            return "duplicate:" + value.constructor.name;
+          }
+          seen.add(value);
+        }
+        return value;
+      };
+    };
+
+    const errorCodes = getErrorCodes(program, operation.operation);
+    if (errorCodes) {
+      oai3Operation.description = oai3Operation.description ?? "";
+      const check1 = (x: any): x is UnionVariant => true;
+      const check2 = (x: any): x is StringLiteral => true;
+      errorCodes.variants.forEach((v) => {
+        if (check1(v.type) && check2(v.type.type)) {
+          oai3Operation.description += v.type.type.value + "\n";
+        }
+      });
+    }
+
     const currentTags = getAllTags(program, op);
     if (currentTags) {
       oai3Operation.tags = currentTags;

@@ -1,4 +1,4 @@
-import type { DecoratorContext, Model, ModelProperty, Union } from "@typespec/compiler";
+import type { DecoratorContext, Model, ModelProperty, Operation, Union } from "@typespec/compiler";
 
 /**
  * Specify that `oneOf` should be used instead of `anyOf` for that union.
@@ -14,4 +14,13 @@ export type UseRefDecorator = (
   context: DecoratorContext,
   target: Model | ModelProperty,
   ref: string
+) => void;
+
+/**
+ * Specify the error codes that can be returned by the operation.
+ */
+export type ErrorCodesDecorator = (
+  context: DecoratorContext,
+  target: Operation,
+  errorCodes: Union
 ) => void;
