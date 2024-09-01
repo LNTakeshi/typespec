@@ -1,0 +1,17 @@
+{
+  "name": "typespec",
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": {
+    "@typespec/compiler": "latest",
+    "@typespec/http": "latest",
+    "@typespec/openapi3": "file:typespec\\packages\\openapi3",
+    "@typespec/rest": "latest",
+    "phpemitter": "file:phpemitter"
+  },
+  "peerDependencies": {
+    "@typespec/openapi": "latest",
+    "@typespec/versioning": "latest"
+  },
+  "private": true
+}

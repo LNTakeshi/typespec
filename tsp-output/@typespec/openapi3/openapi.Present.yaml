@@ -1,0 +1,84 @@
+openapi: 3.0.0
+info:
+  title: Present Service
+  version: 0.0.0
+tags: []
+paths:
+  /:
+    get:
+      operationId: receivePresent
+      description: |
+        1: 内部エラー
+        2: リクエストが不正
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/receivePresentResponse'
+components:
+  schemas:
+    Item:
+      type: object
+      required:
+        - id
+        - name
+        - amount
+      properties:
+        id:
+          type: string
+          description: ID
+        name:
+          type: string
+          description: 名前
+        amount:
+          type: integer
+          format: int64
+          description: 数量
+    Reward:
+      type: object
+      required:
+        - items
+        - weapons
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+        weapons:
+          type: array
+          items:
+            $ref: '#/components/schemas/Weapon'
+    Weapon:
+      type: object
+      required:
+        - id
+        - name
+        - strength
+      properties:
+        id:
+          type: string
+          description: ID
+        name:
+          type: string
+          description: 名前
+        strength:
+          type: integer
+          format: int64
+          description: 数量
+    receivePresentResponse:
+      type: object
+      required:
+        - success
+        - reward
+        - receiveDate
+      properties:
+        success:
+          type: boolean
+        reward:
+          $ref: '#/components/schemas/Reward'
+        receiveDate:
+          type: string
+          format: date-time

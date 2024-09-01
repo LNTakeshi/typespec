@@ -1,0 +1,80 @@
+openapi: 3.0.0
+info:
+  title: Quest Service
+  version: 0.0.0
+tags: []
+paths:
+  /:
+    get:
+      operationId: finishQuest
+      description: |
+        1: 内部エラー
+        3: 認証エラー
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/finishQuestResponse'
+components:
+  schemas:
+    Item:
+      type: object
+      required:
+        - id
+        - name
+        - amount
+      properties:
+        id:
+          type: string
+          description: ID
+        name:
+          type: string
+          description: 名前
+        amount:
+          type: integer
+          format: int64
+          description: 数量
+    Reward:
+      type: object
+      required:
+        - items
+        - weapons
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+        weapons:
+          type: array
+          items:
+            $ref: '#/components/schemas/Weapon'
+    Weapon:
+      type: object
+      required:
+        - id
+        - name
+        - strength
+      properties:
+        id:
+          type: string
+          description: ID
+        name:
+          type: string
+          description: 名前
+        strength:
+          type: integer
+          format: int64
+          description: 数量
+    finishQuestResponse:
+      type: object
+      required:
+        - success
+        - reward
+      properties:
+        success:
+          type: boolean
+        reward:
+          $ref: '#/components/schemas/Reward'

@@ -1,0 +1,4 @@
+emit:
+  - "@typespec/openapi3"
+  # まだ使わないかもなので外してます
+  # - "phpemitter"
